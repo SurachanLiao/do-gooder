@@ -1,0 +1,453 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Do Gooder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Inter:wght@400;500;600&display=swap">
+<style>
+/* Layout: one phone-sized app column; on wide screens it sits in a device frame. Follows the team's Figma file. */
+:root{
+  --bg:#F6F4EE; --card:#FFFFFF; --line:#E6E2D8; --ink:#22342B; --muted:#6F7670;
+  --green:#285C45; --green-soft:#E3ECE5;
+  --amber:#9A6420; --amber-soft:#F4E7CF;
+  --rose:#A65A64; --rose-soft:#F3E1E3;
+  --display:"Newsreader",Georgia,"Times New Roman",serif;
+  --body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:#E9E6DE;color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+.stage{min-height:100%;display:flex;justify-content:center;align-items:center;padding-block:24px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.phone{width:390px;max-width:100%;height:844px;max-height:calc(100vh - 48px);background:var(--bg);border-radius:40px;box-shadow:0 0 0 10px #1F2A24,0 30px 60px rgba(20,30,25,.25);overflow:hidden;display:flex;flex-direction:column;position:relative}
+@media (max-width:500px){
+  body{background:var(--bg)}
+  .stage{padding:0;display:block;height:100%}
+  .phone{width:100%;height:100%;max-height:none;border-radius:0;box-shadow:none}
+}
+header.app{display:flex;justify-content:space-between;align-items:center;padding:18px 24px 6px;min-height:56px}
+.brand{display:flex;align-items:center;gap:7px;font-weight:600;font-size:19px;color:var(--green);letter-spacing:-.01em;background:none;border:0;padding:0}
+.private{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--muted)}
+.back{background:none;border:0;padding:4px;margin-left:-4px;color:var(--green);display:flex}
+main{flex:1;overflow-y:auto;padding:8px 24px 20px;display:flex;flex-direction:column;gap:18px}
+nav.tabs{display:grid;grid-template-columns:1fr 1fr 1.4fr;border-top:1px solid var(--line);background:var(--card);padding:8px 8px calc(10px + env(safe-area-inset-bottom,0px))}
+nav.tabs button{background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;color:var(--muted);padding:6px 0}
+nav.tabs button[aria-current="page"]{color:var(--green);font-weight:600}
+nav.tabs button.rose[aria-current="page"]{color:var(--rose)}
+.eyebrow{font-size:11.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--green)}
+.eyebrow.amber{color:var(--amber)} .eyebrow.rose{color:var(--rose)}
+h1{font-family:var(--display);font-weight:400;font-size:34px;line-height:1.1;margin:0;letter-spacing:-.01em;text-wrap:balance}
+h1.big{font-size:40px}
+.lede{color:var(--muted);margin:0;font-size:15px}
+h2{font-size:15.5px;font-weight:600;margin:0}
+.hint{font-size:12.5px;color:var(--muted);margin:0}
+.stack{display:flex;flex-direction:column;gap:8px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:8px 13px;font-size:13.5px}
+.chip[aria-pressed="true"]{background:var(--green-soft);border-color:var(--green);font-weight:600;color:var(--green)}
+.ask .chip[aria-pressed="true"]{background:var(--amber-soft);border-color:var(--amber);color:var(--amber)}
+.rosebox .chip[aria-pressed="true"]{background:var(--rose-soft);border-color:var(--rose);color:var(--rose)}
+.field{width:100%;border:1px solid var(--line);background:#FAF9F5;border-radius:12px;padding:11px 13px;font-size:14px}
+textarea.field{background:var(--card);min-height:104px;resize:vertical;line-height:1.5;font-size:15.5px;border-radius:16px;padding:14px}
+.label-row{display:flex;justify-content:space-between;align-items:center;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.link{background:none;border:0;padding:0;font-weight:600;font-size:13.5px;color:var(--green);text-align:left}
+.ask .link{color:var(--amber)}
+.btn{width:100%;border:0;border-radius:16px;padding:16px;font-weight:600;font-size:16px;background:var(--green);color:#fff}
+.btn.rose{background:var(--rose)}
+.btn.ghost{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.row2{display:flex;justify-content:space-between;align-items:center;padding:0 34px}
+.quiet{background:none;border:0;color:var(--muted);font-size:14px}
+.swap{background:none;border:0;color:var(--green);font-weight:600;font-size:14px}
+.ask .swap{color:var(--amber)}
+.center{text-align:center}
+.tier{display:flex;align-items:center;gap:16px;background:var(--card);border:0;border-radius:20px;padding:16px 18px;text-align:left;width:100%}
+.tier .ic{width:42px;height:42px;border-radius:50%;background:var(--green-soft);display:grid;place-items:center;color:var(--green);flex:none}
+.tier b{font-family:var(--display);font-weight:400;font-size:23px;display:block;line-height:1.1}
+.tier span{font-size:13px;color:var(--muted)}
+.tier .go{margin-left:auto;color:var(--green)}
+.ladder{background:var(--amber-soft);border-radius:12px;padding:10px 10px 8px;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;font-size:11px;color:var(--muted)}
+.ladder div{border-top:3px solid #E5D3B3;padding-top:6px}
+.ladder div.on{border-color:var(--amber);color:var(--ink)}
+.ladder div.done{border-color:#C9A46E}
+.note{font-size:13px;color:var(--amber);margin:0}
+.spread{background:var(--green-soft);border-radius:14px;padding:12px 14px;font-size:13.5px;display:flex;flex-direction:column;gap:8px}
+.ask .spread{background:var(--amber-soft)}
+.panel{background:var(--card);border-radius:24px;padding:22px}
+.pct{font-family:var(--display);font-size:72px;color:var(--amber);text-align:center;line-height:1;font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--amber);margin:18px 0 8px}
+.scale{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}
+.opt{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px 16px;width:100%;text-align:left;font-size:15px}
+.opt .dot{width:20px;height:20px;border-radius:50%;border:1.5px solid #C8C6BE;flex:none;display:grid;place-items:center}
+.opt[aria-checked="true"]{background:var(--amber-soft);border-color:var(--amber);font-weight:600}
+.opt[aria-checked="true"] .dot{border-color:var(--amber)}
+.opt[aria-checked="true"] .dot::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--amber)}
+.give .opt[aria-checked="true"]{background:var(--green-soft);border-color:var(--green)}
+.give .opt[aria-checked="true"] .dot{border-color:var(--green)}
+.give .opt[aria-checked="true"] .dot::after{background:var(--green)}
+.affirm{border-radius:20px;padding:18px;display:flex;gap:12px;background:var(--amber-soft)}
+.affirm b{display:block;margin-bottom:3px}
+.affirm p{margin:0;font-size:13px;color:var(--muted)}
+.affirm.green{background:var(--green-soft);flex-direction:column;gap:6px;padding:22px}
+.affirm.green .say{font-family:var(--display);font-size:24px;line-height:1.2;color:var(--green)}
+.webwrap{background:var(--card);border-radius:24px;padding:8px}
+svg.web{width:100%;height:auto;display:block}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);padding:4px 10px 8px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+.plist{display:flex;flex-direction:column;background:var(--card);border-radius:20px;overflow:hidden}
+.plist div{display:flex;justify-content:space-between;gap:10px;padding:12px 16px;border-top:1px solid var(--line);font-size:14px}
+.plist div:first-child{border-top:0}
+.plist small{color:var(--muted);font-size:12.5px;text-align:right}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:var(--card);border-radius:18px;padding:14px}
+.stat b{font-family:var(--display);font-weight:400;font-size:30px;display:block;font-variant-numeric:tabular-nums}
+.stat span{font-size:12.5px;color:var(--muted)}
+.saved{background:var(--card);border-radius:24px;padding:20px;display:flex;flex-direction:column;gap:10px}
+.saved .who{font-family:var(--display);font-size:30px;color:var(--rose)}
+.saved .meta{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)}
+.danger{background:var(--rose-soft);border-radius:16px;padding:14px;font-size:13.5px;display:flex;flex-direction:column;gap:10px}
+.toast{position:absolute;left:50%;bottom:96px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:12px;font-size:13.5px;max-width:86%;text-align:center;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+.hero-art{height:110px;display:grid;place-items:center}
+.ic-wrap{display:inline-flex}
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+</style>
+
+<div class="stage"><div class="phone" id="phone">
+  <header class="app" id="hdr"></header>
+  <main id="main"></main>
+  <nav class="tabs" id="tabs" hidden>
+    <button data-tab="today" data-act="tab" data-v="today"><span class="ic-wrap" data-icon="sun"></span>Today</button>
+    <button data-tab="web" data-act="tab" data-v="web"><span class="ic-wrap" data-icon="web"></span>My web</button>
+    <button data-tab="helped" data-act="tab" data-v="helped" class="rose"><span class="ic-wrap" data-icon="heart"></span>Someone helped me</button>
+  </nav>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</div></div>
+
+<script>
+const ICON={
+ sprout:'<path d="M12 21v-8M12 13c0-4-3-6-7-6 0 4 3 6 7 6zM12 11c0-3 2.5-5 6-5 0 3.5-2.5 5-6 5z"/>',
+ lock:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+ back:'<path d="M19 12H5M11 6l-6 6 6 6"/>',
+ arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>',
+ chat:'<path d="M4 18l1.5-3.5A7.5 7.5 0 1 1 9 18.5L4 20z"/>',
+ cup:'<path d="M4 9h12v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5zM16 10h2a2.5 2.5 0 0 1 0 5h-2M8 3v3M12 3v3"/>',
+ hands:'<path d="M3 14l4-1 5 2 5-3a1.8 1.8 0 0 1 2 3l-6 4H8l-5-1zM12 4.5a2.5 2.5 0 0 1 4 3L12 11 8 7.5a2.5 2.5 0 0 1 4-3z"/>',
+ pencil:'<path d="M4 20l4-1 11-11-3-3L5 16zM14 6l3 3"/>',
+ sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+ web:'<rect x="9" y="3" width="6" height="5" rx="1"/><rect x="3" y="16" width="6" height="5" rx="1"/><rect x="15" y="16" width="6" height="5" rx="1"/><path d="M12 8v4M6 16v-2h12v2"/>',
+ heart:'<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/><path d="M9 12l2 2 4-4"/>',
+ check:'<path d="M5 12l5 5 9-10"/>',
+ talk:'<path d="M5 17l1-3a7 7 0 1 1 3 3z"/><path d="M12 13s-2.5-1.5-2.5-3a1.3 1.3 0 0 1 2.5-.5 1.3 1.3 0 0 1 2.5.5c0 1.5-2.5 3-2.5 3z"/>'
+};
+const ic=(n,s=20)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[n]}</svg>`;
+document.querySelectorAll('[data-icon]').forEach(e=>e.innerHTML=ic(e.dataset.icon));
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const DAY=864e5, now=()=>Date.now();
+
+/* ---------- Cards: starter words, each with alternate wordings ---------- */
+const GIVE={
+ 2:{title:'Say thanks',prompt:'Who made your week easier? What did they do?',words:[
+   'Hey {n}, thanks for listening the other day. You made my week a little easier. I really appreciate you.',
+   'Hi {n}! Just wanted to say thank you. What you did meant more than you probably know.',
+   '{n}, I keep thinking about how kind you were. Thank you.']},
+ 10:{title:'Check in',prompt:'Who have you been meaning to catch up with?',words:[
+   'Hey {n}, you crossed my mind today. How are you doing, really? Free for a quick call this week?',
+   'Hi {n}! It has been a while. Want to grab a coffee or a quick walk soon?',
+   '{n}, how did that thing you were working on turn out? I\'d love to hear about it.']},
+ 30:{title:'Lend a hand',prompt:'Who could use an extra pair of hands right now?',words:[
+   'Hey {n}, I have some free time this weekend. Anything I can help with? Moving, errands, a second pair of eyes?',
+   'Hi {n}, I know things are busy for you. Could I bring dinner by one night this week?',
+   '{n}, if you want help studying for that exam, I have an hour on Thursday.']}
+};
+const ASK=[
+ {step:'ask an opinion',title:'A fresh perspective',words:[
+   'Hey {n}, could I get your opinion on an idea for class? A fresh pair of eyes would really help.',
+   'Hi {n}! Quick question: which of these two options would you pick? I trust your taste.',
+   '{n}, you always have good recommendations. Any book or show I should try next?']},
+ {step:'ask a small favor',title:'A small favor',words:[
+   'Hey {n}, would you be up for reading a short draft of mine? Ten minutes of feedback would help a lot.',
+   'Hi {n}, could you send me the notes from Tuesday? I missed part of it.',
+   '{n}, any chance you could practice my presentation with me for a few minutes?']},
+ {step:'ask for real help',title:'Some real help',words:[
+   'Hey {n}, I\'m having a hard week and could use someone to talk to. Would you have time for a call?',
+   'Hi {n}, I\'m moving on Saturday. Could you help for an hour or two? I\'ll bring snacks.',
+   '{n}, I\'m stuck on a big decision and would really value your advice. Could we talk this week?']}
+];
+const GROUPS=['Someone new','A classmate','A coworker','A neighbor','Family'];
+
+/* ---------- State ---------- */
+const KEY='dogooder-v2';
+function sample(){
+  const t=now();
+  return {setup:false,nudges:['Morning','Evening'],comfort:'Not very',ladder:0,yesInRow:1,turn:0,
+   people:{Maya:{kind:'friend'},Eli:{kind:'friend'},Sam:{kind:'friend'},Noor:{kind:'friend'}},
+   log:[
+    {t:t-1*DAY,type:'give',who:'Maya',out:'warm'},
+    {t:t-3*DAY,type:'give',who:'Maya',out:'warm'},
+    {t:t-5*DAY,type:'ask',who:'Eli',guess:30,out:'yes'},
+    {t:t-9*DAY,type:'ask',who:'Sam',guess:40,out:'no'},
+    {t:t-12*DAY,type:'give',who:'Sam',out:'none'},
+    {t:t-6*DAY,type:'got',who:'Noor',what:'Noor shared her class notes when I was ill. It made catching up feel much less overwhelming.'}
+   ]};
+}
+let S;
+try{S=JSON.parse(localStorage.getItem(KEY))||sample()}catch(e){S=sample()}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+
+/* ---------- Draft in progress ---------- */
+let D=null; // {type, tier, who, idx, text, edited, guess, out}
+function newDraft(tier,type){
+  type=type||(S.turn%2===0?'give':'ask');
+  const who=suggestWho();
+  D={type,tier,who,idx:0,edited:false,guess:50,out:null};
+  D.text=fill();
+}
+function words(){return D.type==='give'?GIVE[D.tier].words:ASK[S.ladder].words}
+function fill(){const n=GROUPS.includes(D.who)?'':D.who, w=words()[D.idx%words().length];
+  return n?w.replace(/\{n\}/g,n):w.replace(/ \{n\},/,',').replace(/^\{n\}, (.)/,(m,c)=>c.toUpperCase()).replace(/\{n\}/g,'you')}
+function recent(who){return S.log.filter(l=>l.who===who&&l.type!=='got'&&now()-l.t<7*DAY).length}
+function suggestWho(){const ps=Object.keys(S.people);return ps.find(p=>recent(p)<2)||'Someone new'}
+
+/* ---------- Router ---------- */
+const VIEWS=['welcome','today','card','predict','reflect','web','helped','kept'];
+let view='today', kept=null;
+function go(v,opts={}){view=v;if(opts.kept!==undefined)kept=opts.kept;
+  try{history.replaceState(null,'','#'+v)}catch(e){}
+  render();document.getElementById('main').scrollTop=0}
+window.addEventListener('hashchange',()=>{const h=location.hash.slice(1);if(VIEWS.includes(h)&&h!==view){if((h==='card'||h==='predict'||h==='reflect')&&!D)newDraft(2,h==='card'?undefined:'ask');view=h;render()}});
+
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('show'),2600)}
+
+function header(back){
+  const h=document.getElementById('hdr');
+  h.innerHTML=(back?`<button class="back" data-act="back" aria-label="Back">${ic('back',22)}</button>`:`<button class="brand" data-act="home">${ic('sprout',22)}do gooder</button>`)+`<span class="private">${ic('lock',13)}Just for you</span>`;
+}
+function tabs(active){
+  const n=document.getElementById('tabs');n.hidden=(view==='welcome');
+  n.querySelectorAll('button').forEach(b=>b.setAttribute('aria-current',b.dataset.tab===active?'page':'false'));
+}
+
+/* ---------- Views ---------- */
+function render(){
+  const m=document.getElementById('main');m.className='';
+  const back=['card','predict','reflect'].includes(view);
+  header(back);
+  const tabFor={today:'today',card:'today',predict:'today',reflect:'today',web:'web',helped:'helped',kept:'helped'}[view]||'';
+  tabs(tabFor);
+  m.innerHTML=({welcome:vWelcome,today:vToday,card:vCard,predict:vPredict,reflect:vReflect,web:vWeb,helped:vHelped,kept:vKept})[view]();
+  if(view==='card'){m.classList.add(D.type);const ta=document.getElementById('words');ta.addEventListener('input',()=>{D.text=ta.value;D.edited=true})}
+  if(view==='predict'){m.classList.add('ask');const r=document.getElementById('guess');r.addEventListener('input',()=>{D.guess=+r.value;document.getElementById('pct').textContent=D.guess+'%'})}
+  if(view==='reflect')m.classList.add(D.type);
+  if(view==='helped')m.classList.add('rosebox');
+}
+
+function vWelcome(){
+  const nd=['Morning','Lunch','After class','Evening'].map(x=>`<button class="chip" data-act="nudge" data-v="${x}" aria-pressed="${S.nudges.includes(x)}">${x}</button>`).join('');
+  const cf=['Not very','Somewhat','Very'].map(x=>`<button class="chip" data-act="comfort" data-v="${x}" aria-pressed="${S.comfort===x}">${x}</button>`).join('');
+  return `<div class="hero-art">${miniArt()}</div>
+  <h1 class="big">Small acts,<br>real connection.</h1>
+  <p class="lede">A little giving. A little asking. A gentler way to stay close to the people around you.</p>
+  <div class="stack"><h2>When would a nudge feel right?</h2><p class="hint">Pick up to 2 nudge times. Change them anytime.</p><div class="chips">${nd}</div>
+   <div class="chips"><button class="chip" data-act="nottoday" aria-pressed="${!!S.notToday}">Not today</button></div>
+   ${S.notToday?'<p class="hint">No nudges today. We\'ll check back tomorrow.</p>':''}</div>
+  <div class="stack"><h2>How comfortable are you asking for help?</h2><p class="hint">This sets where your asks start. Small first.</p><div class="chips">${cf}</div></div>
+  <p class="hint" style="display:flex;gap:8px;align-items:center">${ic('lock',16)}No contacts access. Your web stays on this phone.</p>
+  <button class="btn" data-act="start">Start</button>`;
+}
+function miniArt(){return `<svg width="300" height="100" viewBox="0 0 300 100" aria-hidden="true"><path d="M40 50 C90 90,120 70,150 45 S220 0,265 55" fill="none" stroke="#CFDCD3" stroke-width="2"/><circle cx="55" cy="52" r="22" fill="#F4E7CF"/><circle cx="150" cy="45" r="33" fill="#E3ECE5"/><circle cx="262" cy="56" r="18" fill="#F3E1E3"/><g transform="translate(136 31) scale(1.15)" fill="none" stroke="#285C45" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${ICON.hands}</g></svg>`}
+
+function vToday(){
+  const month=new Set(S.log.filter(l=>now()-l.t<30*DAY).map(l=>l.who).filter(w=>!GROUPS.includes(w))).size;
+  const tiers=[[2,'chat','A few kind words'],[10,'cup','A little time for someone'],[30,'hands','Room to do a little more']].map(([m,i,s])=>`<button class="tier" data-act="tier" data-v="${m}"><span class="ic">${ic(i)}</span><span><b>${m} min</b><span>${s}</span></span><span class="go">${ic('arrow')}</span></button>`).join('');
+  const next=S.turn%2===0?'a small way to give':'a small ask';
+  return `<div class="stack" style="gap:10px"><span class="eyebrow">A little room for good</span><h1>Got a few minutes?</h1><p class="lede">Start where you are. Next up is ${next}. We take turns between giving and asking.</p></div>
+  <div class="stack" style="gap:10px">${tiers}</div>
+  <button class="stack" data-act="tab" data-v="web" style="background:none;border:0;padding:0;text-align:left;gap:4px">
+    <span style="display:flex;justify-content:space-between;width:100%"><h2>Small acts make a web</h2><span style="color:var(--green)">${ic('arrow',18)}</span></span>
+    <span class="hint">You've connected with ${month} ${month===1?'person':'people'} this month.</span>
+    ${webSVG(true)}
+  </button>`;
+}
+
+function vCard(){
+  const ask=D.type==='ask', a=ASK[S.ladder], g=GIVE[D.tier];
+  const people=[...Object.keys(S.people),...GROUPS].map(p=>`<button class="chip" data-act="who" data-v="${esc(p)}" aria-pressed="${D.who===p}">${esc(p)}</button>`).join('');
+  const r=GROUPS.includes(D.who)?0:recent(D.who);
+  const alt=Object.keys(S.people).filter(p=>p!==D.who&&recent(p)<2).slice(0,3);
+  const spread=r>=2?`<div class="spread"><span>You've reached out to ${esc(D.who)} ${r} times this week. Want to spread it out?</span><div class="chips">${alt.concat(['Someone new']).map(p=>`<button class="chip" data-act="who" data-v="${esc(p)}">${esc(p)}</button>`).join('')}</div></div>`:'';
+  const ladder=ask?`<div class="ladder">${ASK.map((x,i)=>`<div class="${i===S.ladder?'on':i<S.ladder?'done':''}">${i+1} ${x.step}</div>`).join('')}</div>`:'';
+  return `<div class="stack" style="gap:8px"><span class="eyebrow ${ask?'amber':''}">${ask?'Ask':'Give'} · ${D.tier} min</span><h1>${ask?a.title:g.title}</h1>${ask?'':`<p class="lede">${g.prompt}</p>`}</div>
+  ${ladder}
+  <div class="stack"><h2>Who is it for?</h2><div class="chips">${people}</div>
+   <input class="field" id="typed" placeholder="Type a first name" autocomplete="off" data-act="typed"></div>
+  ${spread}
+  <div class="stack"><div class="label-row"><span>Your words, a little start</span><span>${ic('pencil',16)}</span></div>
+   <textarea class="field" id="words" aria-label="Your message">${esc(D.text)}</textarea>
+   <button class="link" data-act="reword">Try another wording</button></div>
+  ${ask?`<p class="note">People asking for help tend to underestimate how many others say yes.</p>`:`<p class="hint center">Copy this, then send in your own messaging app.</p>`}
+  <button class="btn" data-act="${ask?'topredict':'send'}">${ask?'Next':"I'll send it myself"}</button>
+  <div class="row2"><button class="swap" data-act="swap">Swap card</button><button class="quiet" data-act="notnow">Not now</button></div>`;
+}
+
+function vPredict(){
+  const n=GROUPS.includes(D.who)?'them':D.who;
+  return `<div class="stack" style="gap:8px"><span class="eyebrow amber">Before you ask</span><h1>How likely is it they'll say yes?</h1><p class="lede">There's no right answer. Just notice what you're expecting before you ask ${esc(n)}.</p></div>
+  <div class="panel"><div class="pct" id="pct">${D.guess}%</div>
+   <label for="guess" class="hint" style="display:block;text-align:center;margin-top:10px">Your guess</label>
+   <input type="range" id="guess" min="0" max="100" step="5" value="${D.guess}">
+   <div class="scale"><span>0%</span><span>In steps of 5%</span><span>100%</span></div></div>
+  <p class="hint center" style="display:flex;gap:6px;justify-content:center">${ic('lock',15)}Only you see this.</p>
+  <p class="hint">We'll copy your words. Open your own messaging app and send when you're ready. We never send for you.</p>
+  <button class="btn" data-act="send">I'll send it myself</button>`;
+}
+
+function vReflect(){
+  const n=GROUPS.includes(D.who)?'them':D.who, ask=D.type==='ask';
+  const opts=ask?[['yes','They said yes'],['wait','No answer yet'],['no','They said no'],['unsent',"I didn't send it"]]:[['warm','They replied warmly'],['wait','No reply yet'],['unsent',"I didn't send it"]];
+  const o=opts.map(([k,l])=>`<button class="opt" role="radio" aria-checked="${D.out===k}" data-act="out" data-v="${k}"><span class="dot"></span>${l}</button>`).join('');
+  let aff='';
+  if(ask&&D.out){
+    const A={yes:['A little more possible.',`You thought there was a ${D.guess}% chance. ${esc(cap(n))} said yes. Let that sink in.`],
+      wait:['Asking is the brave part.','You can come back and update this when you hear back.'],
+      no:['A no is information, not a verdict.',`You guessed ${D.guess}%. People say no for their own reasons, often about timing. Asking still counts.`],
+      unsent:['That is okay.','Not every moment is the right one. The card will be here another day.']}[D.out];
+    aff=`<div class="affirm">${'<span style="color:var(--amber)">'+ic('talk',26)+'</span>'}<div><b>${A[0]}</b><p>${A[1]}</p></div></div>`;
+  }
+  if(!ask)aff=`<div class="affirm green"><span style="color:var(--green)">${ic('sprout',26)}</span><span class="say">Small words can mean more than we know.</span><p>A reply is lovely. The kindness still matters, even without one.</p></div>`;
+  return `<div class="stack" style="gap:8px"><span class="eyebrow ${ask?'amber':''}">Reflect · ${ask?'Ask':'Give'}</span><h1>How did it go?</h1>
+   <p class="lede">${ask?`You asked ${esc(n)} for ${['an opinion','a small favor','some real help'][S.ladder]}. Whatever happened, it's okay.`:`You made space to reach ${esc(n)}. How did it feel on the other side?`}</p></div>
+  <div class="stack" role="radiogroup" aria-label="What happened">${o}</div>
+  ${aff}
+  <p class="hint center">${ask?'A private note, not a measure of you.':'Just a moment to notice, not to judge.'}</p>
+  <button class="btn" data-act="saveref" ${D.out?'':'disabled'}>Save reflection</button>`;
+}
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+
+function webData(){
+  const by={};
+  S.log.forEach(l=>{if(GROUPS.includes(l.who))return;(by[l.who]=by[l.who]||{give:0,ask:0,got:0,last:0});by[l.who][l.type]++;by[l.who].last=Math.max(by[l.who].last,l.t)});
+  Object.keys(S.people).forEach(p=>by[p]=by[p]||{give:0,ask:0,got:0,last:0});
+  const groupActs=S.log.filter(l=>GROUPS.includes(l.who)).length;
+  return {by,groupActs};
+}
+function webSVG(mini){
+  const {by}=webData(), names=Object.keys(by), W=340,H=mini?150:300, cx=W/2, cy=H/2;
+  const fill={give:'#E3ECE5',ask:'#F4E7CF',got:'#F3E1E3'}, stroke={give:'#285C45',ask:'#9A6420',got:'#A65A64'};
+  let lines='',nodes='';
+  names.forEach((p,i)=>{
+    const a=-Math.PI/2+i*(2*Math.PI/names.length)+(mini?0.6:0);
+    const R=mini?Math.min(120,58+i*6):105+((i%2)*22);
+    const x=cx+Math.cos(a)*R*(mini?1.15:1), y=cy+Math.sin(a)*R*(mini?.48:.95);
+    const d=by[p], tot=d.give+d.ask+d.got, main=['give','ask','got'].sort((u,v)=>d[v]-d[u])[0];
+    const sw=mini?1.5:1+Math.min(tot,5)*0.8;
+    lines+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#CFDCD3" stroke-width="${sw}"/>`;
+    const w=Math.max(54,p.length*8.5+26), h=mini?32:34+Math.min(tot,4)*3;
+    nodes+=`<g><rect x="${x-w/2}" y="${y-h/2}" width="${w}" height="${h}" rx="${h/2}" fill="${tot?fill[main]:'#F1EFE9'}" ${!mini&&tot?`stroke="${stroke[main]}" stroke-opacity=".35"`:''}/><text x="${x}" y="${y+4.5}" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="13" fill="#22342B">${esc(p)}</text></g>`;
+  });
+  return `<svg class="web" viewBox="0 0 ${W} ${H}" role="img" aria-label="Your web of connections: ${names.join(', ')}">${lines}${nodes}<rect x="${cx-29}" y="${cy-20}" width="58" height="40" rx="20" fill="#285C45"/><text x="${cx}" y="${cy+5}" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="14" fill="#fff">You</text></svg>`;
+}
+function ago(t){if(!t)return 'Not yet';const d=Math.floor((now()-t)/DAY);return d<=0?'Today':d===1?'Yesterday':d+' days ago'}
+function vWeb(){
+  const {by,groupActs}=webData();
+  const asks=S.log.filter(l=>l.type==='ask'&&l.guess!=null&&['yes','no'].includes(l.out));
+  const avg=asks.length?Math.round(asks.reduce((s,l)=>s+l.guess,0)/asks.length):null;
+  const yes=asks.length?Math.round(100*asks.filter(l=>l.out==='yes').length/asks.length):null;
+  const rows=Object.entries(by).sort((a,b)=>b[1].last-a[1].last).map(([p,d])=>{
+    const bits=[d.give&&`${d.give} give`,d.ask&&`${d.ask} ask`,d.got&&`${d.got} helped you`].filter(Boolean).join(' · ')||'No activity yet';
+    const r=recent(p);
+    return `<div><span><b style="font-weight:600">${esc(p)}</b><br><small style="text-align:left;display:block">${bits}</small></span><small>${ago(d.last)}${r>=2?'<br>Give them a rest':''}</small></div>`}).join('');
+  return `<div class="stack" style="gap:8px"><span class="eyebrow">My web</span><h1>Your web of connections</h1><p class="lede">It grows each time you give, ask, or notice help. No one here is a score.</p></div>
+  <div class="webwrap">${webSVG(false)}<div class="legend"><span><i style="background:#E3ECE5;border:1px solid #285C45"></i>Mostly giving</span><span><i style="background:#F4E7CF;border:1px solid #9A6420"></i>Mostly asking</span><span><i style="background:#F3E1E3;border:1px solid #A65A64"></i>They helped you</span></div></div>
+  <div class="stack"><h2>Your guesses and what happened</h2>
+   <div class="stats"><div class="stat"><b>${avg==null?'–':avg+'%'}</b><span>Your average guess that they'd say yes</span></div><div class="stat"><b>${yes==null?'–':yes+'%'}</b><span>How often they actually said yes</span></div></div>
+   <p class="hint">${asks.length?`From ${asks.length} ask${asks.length>1?'s':''} with an answer.${yes>avg?' People said yes more often than you expected.':''}`:'Make an ask to start comparing.'}</p></div>
+  <div class="stack"><h2>People in your web</h2><div class="plist">${rows}</div>
+   ${groupActs?`<p class="hint">Plus ${groupActs} small act${groupActs>1?'s':''} for someone new, a classmate, or a neighbor.</p>`:''}</div>
+  <div class="danger" id="delbox"><span><b>Your data stays on this phone.</b> Nothing is uploaded, and the app never reads your contacts.</span><button class="btn ghost" data-act="del1">Delete my data</button></div>`;
+}
+
+function vHelped(){
+  return `<div class="stack" style="gap:8px"><span class="eyebrow rose">Care comes back, too</span><h1>Someone helped me</h1><p class="lede">A small kindness is worth noticing. Keep a little note, just for yourself.</p></div>
+  <div class="panel stack" style="gap:10px"><h2 id="wl">Who was there for you?</h2>
+   <input class="field" id="gotwho" aria-labelledby="wl" placeholder="First name" autocomplete="off">
+   <p class="hint">A first name is all you need.</p>
+   <h2 id="whl" style="margin-top:6px">What did they do?</h2>
+   <textarea class="field" id="gotwhat" aria-labelledby="whl" style="background:#FAF9F5;font-size:14.5px" placeholder="They checked in when I was having a rough week."></textarea></div>
+  <p class="hint" style="display:flex;gap:8px;align-items:flex-start;color:var(--rose)">${ic('lock',16)}<span style="color:var(--muted)">Saved only on this phone. Nothing is shared or sent.</span></p>
+  <button class="btn rose" data-act="keep">Keep this moment</button>
+  ${S.log.some(l=>l.type==='got')?`<button class="link" style="color:var(--rose);text-align:center" data-act="seekept">See the kindness you've kept</button>`:''}`;
+}
+function vKept(){
+  const items=S.log.filter(l=>l.type==='got').sort((a,b)=>b.t-a.t);
+  const first=kept!=null;
+  const cards=items.map(l=>`<div class="saved"><div class="meta"><span style="width:44px;height:44px;border-radius:50%;background:var(--rose-soft);display:grid;place-items:center;color:var(--rose)">${ic('heart')}</span><span>${ago(l.t)}</span></div><div class="who">${esc(l.who)}</div><div>${esc(l.what)}</div><div class="meta"><span></span><button class="quiet" data-act="delnote" data-v="${l.t}">Delete</button></div></div>`).join('');
+  return `<div class="stack" style="gap:8px"><span class="eyebrow rose" style="display:flex;gap:6px;align-items:center">${first?ic('check',15)+'Kept, just for you':'Kept, just for you'}</span><h1>You don't have to do it all alone.</h1><p class="lede">A quiet place to remember the people who make things a little lighter.</p></div>
+  ${cards||'<p class="hint">Nothing kept yet.</p>'}
+  <p class="hint center" style="display:flex;gap:6px;justify-content:center">${ic('lock',15)}Only on this phone. Only for you.</p>
+  <button class="btn rose" data-act="tab" data-v="helped">Note another kindness</button>
+  <button class="btn ghost" data-act="tab" data-v="today">Back to Today</button>`;
+}
+
+/* ---------- Actions ---------- */
+async function copy(text){try{await navigator.clipboard.writeText(text);return true}catch(e){return false}}
+document.getElementById('phone').addEventListener('click',async e=>{
+  const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act,v=b.dataset.v;
+  if(a==='typed')return;
+  if(a==='home'||a==='back'){
+    if(a==='back'&&view==='predict')return go('card');
+    if(a==='back'&&view==='reflect')return go(D.type==='ask'?'predict':'card');
+    return go(S.setup?'today':'welcome')}
+  if(a==='nottoday'){S.notToday=!S.notToday;if(S.notToday)S.nudges=[];save();return render()}
+  if(a==='nudge'){S.notToday=false;const i=S.nudges.indexOf(v);if(i>=0)S.nudges.splice(i,1);else{if(S.nudges.length>=2){toast('Two nudges a day is the most. Unpick one first.');return}S.nudges.push(v)}save();return render()}
+  if(a==='comfort'){S.comfort=v;S.ladder=v==='Very'?1:0;save();return render()}
+  if(a==='start'){S.setup=true;save();return go('today')}
+  if(a==='tab')return go(v);
+  if(a==='tier'){newDraft(+v);return go('card')}
+  if(a==='who'){const old=D.who;D.who=v;
+    if(!D.edited)D.text=fill();else if(!GROUPS.includes(old)&&!GROUPS.includes(v))D.text=D.text.split(old).join(v);
+    return render()}
+  if(a==='reword'){D.idx++;D.text=fill();D.edited=false;return render()}
+  if(a==='swap'){D.type=D.type==='give'?'ask':'give';D.idx=0;D.edited=false;D.text=fill();return render()}
+  if(a==='notnow'){D=null;toast('No problem. Come back whenever.');return go('today')}
+  if(a==='topredict'){D.text=document.getElementById('words').value;return go('predict')}
+  if(a==='send'){
+    if(view==='card')D.text=document.getElementById('words').value;
+    const ok=await copy(D.text);
+    toast(ok?'Copied. Paste it into your own messaging app.':'Select the words and copy them into your messaging app.');
+    return go('reflect')}
+  if(a==='out'){D.out=v;return render()}
+  if(a==='saveref'){
+    if(!GROUPS.includes(D.who)&&!S.people[D.who])S.people[D.who]={kind:'added'};
+    if(D.out!=='unsent'){S.log.push({t:now(),type:D.type,who:D.who,guess:D.type==='ask'?D.guess:null,out:D.out})}
+    let msg='Saved. Your web grew a little.';
+    if(D.type==='ask'&&D.out==='yes'){S.yesInRow++;if(S.yesInRow>=2&&S.ladder<2){S.ladder++;S.yesInRow=0;msg='Two yeses. Next time, a slightly bigger ask.'}}
+    if(D.out==='unsent')msg='Saved. No pressure.';
+    S.turn++;save();D=null;toast(msg);return go('today')}
+  if(a==='keep'){
+    const w=document.getElementById('gotwho').value.trim(), t=document.getElementById('gotwhat').value.trim();
+    if(!w){toast('Add a first name first.');document.getElementById('gotwho').focus();return}
+    S.log.push({t:now(),type:'got',who:w,what:t||'They were there for me.'});
+    if(!S.people[w])S.people[w]={kind:'added'};save();return go('kept',{kept:true})}
+  if(a==='seekept')return go('kept',{kept:null});
+  if(a==='delnote'){S.log=S.log.filter(l=>!(l.type==='got'&&String(l.t)===v));save();return render()}
+  if(a==='del1'){document.getElementById('delbox').innerHTML=`<span><b>Delete everything?</b> Your web, reflections, and kept notes will be erased from this phone. This can't be undone.</span><button class="btn rose" data-act="del2">Yes, delete my data</button><button class="btn ghost" data-act="tab" data-v="web">Keep it</button>`;return}
+  if(a==='del2'){try{localStorage.removeItem(KEY)}catch(e){}S=sample();S.log=[];S.people={};save();toast('Deleted. You are starting fresh.');return go('welcome')}
+});
+document.getElementById('phone').addEventListener('keydown',e=>{
+  if(e.target.id==='typed'&&e.key==='Enter'){const v=e.target.value.trim().replace(/[^\p{L}\p{M}' -]/gu,'').slice(0,20);if(!v)return;
+    const old=D.who;D.who=cap(v);if(!D.edited)D.text=fill();else if(!GROUPS.includes(old))D.text=D.text.split(old).join(D.who);render()}
+});
+document.getElementById('phone').addEventListener('change',e=>{
+  if(e.target.id==='typed'){const v=e.target.value.trim().replace(/[^\p{L}\p{M}' -]/gu,'').slice(0,20);if(!v)return;const old=D.who;D.who=cap(v);if(!D.edited)D.text=fill();else if(!GROUPS.includes(old))D.text=D.text.split(old).join(D.who);render()}
+});
+
+/* ---------- Boot ---------- */
+const h=location.hash.slice(1);
+if(VIEWS.includes(h)){if(['card','predict','reflect'].includes(h))newDraft(2,h==='card'?'give':'ask');if(h==='reflect')D.out=null;view=h}
+else view=S.setup?'today':'welcome';
+render();
+</script>
+
+</body></html>
