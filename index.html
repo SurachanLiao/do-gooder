@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html><head><meta charset=utf8><link rel="manifest" href="manifest.json"><meta name="theme-color" content="#285C45"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Do Gooder"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Do Gooder</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Inter:wght@400;500;600&display=swap">
@@ -113,7 +113,7 @@ svg.web{width:100%;height:auto;display:block}
 .ic-wrap{display:inline-flex}
 @media (prefers-reduced-motion:reduce){.toast{transition:none}}
 </style>
-
+ 
 <div class="stage"><div class="phone" id="phone">
   <header class="app" id="hdr"></header>
   <main id="main"></main>
@@ -124,7 +124,7 @@ svg.web{width:100%;height:auto;display:block}
   </nav>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 </div></div>
-
+ 
 <script>
 const ICON={
  sprout:'<path d="M12 21v-8M12 13c0-4-3-6-7-6 0 4 3 6 7 6zM12 11c0-3 2.5-5 6-5 0 3.5-2.5 5-6 5z"/>',
@@ -145,7 +145,7 @@ const ic=(n,s=20)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="no
 document.querySelectorAll('[data-icon]').forEach(e=>e.innerHTML=ic(e.dataset.icon));
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const DAY=864e5, now=()=>Date.now();
-
+ 
 /* ---------- Cards: starter words, each with alternate wordings ---------- */
 const GIVE={
  2:{title:'Say thanks',prompt:'Who made your week easier? What did they do?',words:[
@@ -176,7 +176,7 @@ const ASK=[
    '{n}, I\'m stuck on a big decision and would really value your advice. Could we talk this week?']}
 ];
 const GROUPS=['Someone new','A classmate','A coworker','A neighbor','Family'];
-
+ 
 /* ---------- State ---------- */
 const KEY='dogooder-v2';
 function sample(){
@@ -195,7 +195,7 @@ function sample(){
 let S;
 try{S=JSON.parse(localStorage.getItem(KEY))||sample()}catch(e){S=sample()}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
-
+ 
 /* ---------- Draft in progress ---------- */
 let D=null; // {type, tier, who, idx, text, edited, guess, out}
 function newDraft(tier,type){
@@ -209,7 +209,7 @@ function fill(){const n=GROUPS.includes(D.who)?'':D.who, w=words()[D.idx%words()
   return n?w.replace(/\{n\}/g,n):w.replace(/ \{n\},/,',').replace(/^\{n\}, (.)/,(m,c)=>c.toUpperCase()).replace(/\{n\}/g,'you')}
 function recent(who){return S.log.filter(l=>l.who===who&&l.type!=='got'&&now()-l.t<7*DAY).length}
 function suggestWho(){const ps=Object.keys(S.people);return ps.find(p=>recent(p)<2)||'Someone new'}
-
+ 
 /* ---------- Router ---------- */
 const VIEWS=['welcome','today','card','predict','reflect','web','helped','kept'];
 let view='today', kept=null;
@@ -217,9 +217,9 @@ function go(v,opts={}){view=v;if(opts.kept!==undefined)kept=opts.kept;
   try{history.replaceState(null,'','#'+v)}catch(e){}
   render();document.getElementById('main').scrollTop=0}
 window.addEventListener('hashchange',()=>{const h=location.hash.slice(1);if(VIEWS.includes(h)&&h!==view){if((h==='card'||h==='predict'||h==='reflect')&&!D)newDraft(2,h==='card'?undefined:'ask');view=h;render()}});
-
+ 
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('show'),2600)}
-
+ 
 function header(back){
   const h=document.getElementById('hdr');
   h.innerHTML=(back?`<button class="back" data-act="back" aria-label="Back">${ic('back',22)}</button>`:`<button class="brand" data-act="home">${ic('sprout',22)}do gooder</button>`)+`<span class="private">${ic('lock',13)}Just for you</span>`;
@@ -228,7 +228,7 @@ function tabs(active){
   const n=document.getElementById('tabs');n.hidden=(view==='welcome');
   n.querySelectorAll('button').forEach(b=>b.setAttribute('aria-current',b.dataset.tab===active?'page':'false'));
 }
-
+ 
 /* ---------- Views ---------- */
 function render(){
   const m=document.getElementById('main');m.className='';
@@ -242,7 +242,7 @@ function render(){
   if(view==='reflect')m.classList.add(D.type);
   if(view==='helped')m.classList.add('rosebox');
 }
-
+ 
 function vWelcome(){
   const nd=['Morning','Lunch','After class','Evening'].map(x=>`<button class="chip" data-act="nudge" data-v="${x}" aria-pressed="${S.nudges.includes(x)}">${x}</button>`).join('');
   const cf=['Not very','Somewhat','Very'].map(x=>`<button class="chip" data-act="comfort" data-v="${x}" aria-pressed="${S.comfort===x}">${x}</button>`).join('');
@@ -257,7 +257,7 @@ function vWelcome(){
   <button class="btn" data-act="start">Start</button>`;
 }
 function miniArt(){return `<svg width="300" height="100" viewBox="0 0 300 100" aria-hidden="true"><path d="M40 50 C90 90,120 70,150 45 S220 0,265 55" fill="none" stroke="#CFDCD3" stroke-width="2"/><circle cx="55" cy="52" r="22" fill="#F4E7CF"/><circle cx="150" cy="45" r="33" fill="#E3ECE5"/><circle cx="262" cy="56" r="18" fill="#F3E1E3"/><g transform="translate(136 31) scale(1.15)" fill="none" stroke="#285C45" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${ICON.hands}</g></svg>`}
-
+ 
 function vToday(){
   const month=new Set(S.log.filter(l=>now()-l.t<30*DAY).map(l=>l.who).filter(w=>!GROUPS.includes(w))).size;
   const tiers=[[2,'chat','A few kind words'],[10,'cup','A little time for someone'],[30,'hands','Room to do a little more']].map(([m,i,s])=>`<button class="tier" data-act="tier" data-v="${m}"><span class="ic">${ic(i)}</span><span><b>${m} min</b><span>${s}</span></span><span class="go">${ic('arrow')}</span></button>`).join('');
@@ -270,7 +270,7 @@ function vToday(){
     ${webSVG(true)}
   </button>`;
 }
-
+ 
 function vCard(){
   const ask=D.type==='ask', a=ASK[S.ladder], g=GIVE[D.tier];
   const people=[...Object.keys(S.people),...GROUPS].map(p=>`<button class="chip" data-act="who" data-v="${esc(p)}" aria-pressed="${D.who===p}">${esc(p)}</button>`).join('');
@@ -290,7 +290,7 @@ function vCard(){
   <button class="btn" data-act="${ask?'topredict':'send'}">${ask?'Next':"I'll send it myself"}</button>
   <div class="row2"><button class="swap" data-act="swap">Swap card</button><button class="quiet" data-act="notnow">Not now</button></div>`;
 }
-
+ 
 function vPredict(){
   const n=GROUPS.includes(D.who)?'them':D.who;
   return `<div class="stack" style="gap:8px"><span class="eyebrow amber">Before you ask</span><h1>How likely is it they'll say yes?</h1><p class="lede">There's no right answer. Just notice what you're expecting before you ask ${esc(n)}.</p></div>
@@ -302,7 +302,7 @@ function vPredict(){
   <p class="hint">We'll copy your words. Open your own messaging app and send when you're ready. We never send for you.</p>
   <button class="btn" data-act="send">I'll send it myself</button>`;
 }
-
+ 
 function vReflect(){
   const n=GROUPS.includes(D.who)?'them':D.who, ask=D.type==='ask';
   const opts=ask?[['yes','They said yes'],['wait','No answer yet'],['no','They said no'],['unsent',"I didn't send it"]]:[['warm','They replied warmly'],['wait','No reply yet'],['unsent',"I didn't send it"]];
@@ -324,7 +324,7 @@ function vReflect(){
   <button class="btn" data-act="saveref" ${D.out?'':'disabled'}>Save reflection</button>`;
 }
 const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
-
+ 
 function webData(){
   const by={};
   S.log.forEach(l=>{if(GROUPS.includes(l.who))return;(by[l.who]=by[l.who]||{give:0,ask:0,got:0,last:0});by[l.who][l.type]++;by[l.who].last=Math.max(by[l.who].last,l.t)});
@@ -367,7 +367,7 @@ function vWeb(){
    ${groupActs?`<p class="hint">Plus ${groupActs} small act${groupActs>1?'s':''} for someone new, a classmate, or a neighbor.</p>`:''}</div>
   <div class="danger" id="delbox"><span><b>Your data stays on this phone.</b> Nothing is uploaded, and the app never reads your contacts.</span><button class="btn ghost" data-act="del1">Delete my data</button></div>`;
 }
-
+ 
 function vHelped(){
   return `<div class="stack" style="gap:8px"><span class="eyebrow rose">Care comes back, too</span><h1>Someone helped me</h1><p class="lede">A small kindness is worth noticing. Keep a little note, just for yourself.</p></div>
   <div class="panel stack" style="gap:10px"><h2 id="wl">Who was there for you?</h2>
@@ -389,7 +389,7 @@ function vKept(){
   <button class="btn rose" data-act="tab" data-v="helped">Note another kindness</button>
   <button class="btn ghost" data-act="tab" data-v="today">Back to Today</button>`;
 }
-
+ 
 /* ---------- Actions ---------- */
 async function copy(text){try{await navigator.clipboard.writeText(text);return true}catch(e){return false}}
 document.getElementById('phone').addEventListener('click',async e=>{
@@ -442,12 +442,13 @@ document.getElementById('phone').addEventListener('keydown',e=>{
 document.getElementById('phone').addEventListener('change',e=>{
   if(e.target.id==='typed'){const v=e.target.value.trim().replace(/[^\p{L}\p{M}' -]/gu,'').slice(0,20);if(!v)return;const old=D.who;D.who=cap(v);if(!D.edited)D.text=fill();else if(!GROUPS.includes(old))D.text=D.text.split(old).join(D.who);render()}
 });
-
+ 
 /* ---------- Boot ---------- */
 const h=location.hash.slice(1);
 if(VIEWS.includes(h)){if(['card','predict','reflect'].includes(h))newDraft(2,h==='card'?'give':'ask');if(h==='reflect')D.out=null;view=h}
 else view=S.setup?'today':'welcome';
 render();
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}
 </script>
-
+ 
 </body></html>
