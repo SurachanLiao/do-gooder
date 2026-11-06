@@ -365,6 +365,7 @@ function vWeb(){
    <p class="hint">${asks.length?`From ${asks.length} ask${asks.length>1?'s':''} with an answer.${yes>avg?' People said yes more often than you expected.':''}`:'Make an ask to start comparing.'}</p></div>
   <div class="stack"><h2>People in your web</h2><div class="plist">${rows}</div>
    ${groupActs?`<p class="hint">Plus ${groupActs} small act${groupActs>1?'s':''} for someone new, a classmate, or a neighbor.</p>`:''}</div>
+  <div class="panel stack" style="gap:10px"><h2>Share with the study</h2><p class="hint">Sends counts, guesses and results only. No names, messages or notes.</p><input class="field" id="studyid" placeholder="Study ID, for example P07" autocomplete="off" value="${esc(S.studyId||'')}"><button class="btn" data-act="export">Share my summary</button><textarea class="field" id="exportbox" readonly hidden style="font-size:12.5px;min-height:160px"></textarea></div>
   <div class="danger" id="delbox"><span><b>Your data stays on this phone.</b> Nothing is uploaded, and the app never reads your contacts.</span><button class="btn ghost" data-act="del1">Delete my data</button></div>`;
 }
  
@@ -388,6 +389,27 @@ function vKept(){
   <p class="hint center" style="display:flex;gap:6px;justify-content:center">${ic('lock',15)}Only on this phone. Only for you.</p>
   <button class="btn rose" data-act="tab" data-v="helped">Note another kindness</button>
   <button class="btn ghost" data-act="tab" data-v="today">Back to Today</button>`;
+}
+ 
+/* ---------- Export ---------- */
+const ymd=t=>new Date(t).toLocaleDateString('en-CA');
+function summary(){
+  const L=[...S.log].sort((a,b)=>a.t-b.t), gives=L.filter(l=>l.type==='give'), asks=L.filter(l=>l.type==='ask'), got=L.filter(l=>l.type==='got');
+  const cnt=(arr,k)=>arr.filter(l=>l.out===k).length;
+  const ans=asks.filter(l=>l.guess!=null&&['yes','no'].includes(l.out));
+  const avg=ans.length?Math.round(ans.reduce((s,l)=>s+l.guess,0)/ans.length)+'%':'none';
+  const yes=ans.length?Math.round(100*cnt(ans,'yes')/ans.length)+'%':'none';
+  const rungs=['opinion','small favor','real help'];
+  const lines=['Do Gooder summary','Study ID: '+(S.studyId||'not entered'),'Exported: '+ymd(now()),
+   'Days the app was opened: '+((S.days||[]).length),
+   'Give acts: '+gives.length+' (replied warmly '+cnt(gives,'warm')+', no reply yet '+cnt(gives,'wait')+')',
+   'Ask acts: '+asks.length+' (yes '+cnt(asks,'yes')+', no '+cnt(asks,'no')+', no answer yet '+cnt(asks,'wait')+')',
+   'Help received notes: '+got.length,
+   'Average guess on answered asks: '+avg,'Actual yes rate: '+yes,'','Each ask, oldest first:'];
+  asks.forEach((l,i)=>lines.push((i+1)+'. '+ymd(l.t)+', '+(l.rung!=null?rungs[l.rung]:'ask')+', guess '+l.guess+'%, '+({yes:'yes',no:'no',wait:'no answer yet'}[l.out]||l.out)));
+  if(!asks.length)lines.push('none');
+  lines.push('','No names, messages or notes are included.');
+  return lines.join('\n');
 }
  
 /* ---------- Actions ---------- */
@@ -420,7 +442,7 @@ document.getElementById('phone').addEventListener('click',async e=>{
   if(a==='out'){D.out=v;return render()}
   if(a==='saveref'){
     if(!GROUPS.includes(D.who)&&!S.people[D.who])S.people[D.who]={kind:'added'};
-    if(D.out!=='unsent'){S.log.push({t:now(),type:D.type,who:D.who,guess:D.type==='ask'?D.guess:null,out:D.out})}
+    if(D.out!=='unsent'){S.log.push({t:now(),type:D.type,who:D.who,guess:D.type==='ask'?D.guess:null,out:D.out,tier:D.tier,rung:D.type==='ask'?S.ladder:null})}
     let msg='Saved. Your web grew a little.';
     if(D.type==='ask'&&D.out==='yes'){S.yesInRow++;if(S.yesInRow>=2&&S.ladder<2){S.ladder++;S.yesInRow=0;msg='Two yeses. Next time, a slightly bigger ask.'}}
     if(D.out==='unsent')msg='Saved. No pressure.';
@@ -432,6 +454,11 @@ document.getElementById('phone').addEventListener('click',async e=>{
     if(!S.people[w])S.people[w]={kind:'added'};save();return go('kept',{kept:true})}
   if(a==='seekept')return go('kept',{kept:null});
   if(a==='delnote'){S.log=S.log.filter(l=>!(l.type==='got'&&String(l.t)===v));save();return render()}
+  if(a==='export'){
+    const id=document.getElementById('studyid').value.trim().slice(0,20);S.studyId=id;save();
+    const text=summary(), box=document.getElementById('exportbox');box.value=text;box.hidden=false;
+    if(navigator.share){try{await navigator.share({title:'Do Gooder summary',text});return}catch(e){if(e.name==='AbortError')return}}
+    const ok=await copy(text);toast(ok?'Summary copied. Paste it into the survey.':'Select the summary below and copy it.');return}
   if(a==='del1'){document.getElementById('delbox').innerHTML=`<span><b>Delete everything?</b> Your web, reflections, and kept notes will be erased from this phone. This can't be undone.</span><button class="btn rose" data-act="del2">Yes, delete my data</button><button class="btn ghost" data-act="tab" data-v="web">Keep it</button>`;return}
   if(a==='del2'){try{localStorage.removeItem(KEY)}catch(e){}S=sample();S.log=[];S.people={};save();toast('Deleted. You are starting fresh.');return go('welcome')}
 });
@@ -447,6 +474,7 @@ document.getElementById('phone').addEventListener('change',e=>{
 const h=location.hash.slice(1);
 if(VIEWS.includes(h)){if(['card','predict','reflect'].includes(h))newDraft(2,h==='card'?'give':'ask');if(h==='reflect')D.out=null;view=h}
 else view=S.setup?'today':'welcome';
+S.days=S.days||[];{const d=ymd(now());if(!S.days.includes(d)){S.days.push(d);save()}}
 render();
 if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}
 </script>
